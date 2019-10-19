@@ -1,0 +1,23 @@
+{
+  "name": "emtech-hackathon",
+  "version": "1.0.0",
+  "description": "Emerging Technology Hackathon 2019",
+  "main": "app.js",
+  "scripts": {
+    "start": "electron .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vmankala/emtech-hackathon.git"
+  },
+  "author": "Vidip Mankala",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/vmankala/emtech-hackathon/issues"
+  },
+  "homepage": "https://github.com/vmankala/emtech-hackathon#readme",
+  "devDependencies": {
+    "electron": "^6.0.12"
+  }
+}
