@@ -99,3 +99,11 @@ public
 
 # TernJS port file
 .tern-port
+
+# Visual studio code
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.code-workspace
