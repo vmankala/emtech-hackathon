@@ -16,6 +16,31 @@
     <br/>
     <div class="container">
         <div class="card-panel grey lighten-5 z-depth-1">
+            <h4>Predict Sleep Quality</h4>
+            <div class="row">
+                <form class="col s12">
+                    <div class="row center-align">
+                        <div class="col s1"></div>
+                        <div class="input-field col s4">
+                            <input id="p_start_time" type="text" class="validate">
+                            <label for="p_start_time">Bedtime</label>
+                        </div>
+                        <div class="input-field col s4">
+                            <input id="p_end_time" type="text" class="validate">
+                            <label for="p_end_time">Wake Time</label>
+                        </div>
+                        <div class="col s2">
+                            <button class="waves-effect waves-light btn-large grey lighten-3 grey-text text-darken-4" type="button" onclick="(function(){socket=io();socket.emit('qualityPredict',document.getElementById('p_start_time').value,document.getElementById('p_end_time').value)})()">predict</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            Quality Prediction: <span id="quality_span"></span>
+        </div>
+    </div>
+    </br>
+    <div class="container">
+        <div class="card-panel grey lighten-5 z-depth-1">
             <h4>Add Training Data</h4>
             <div class="row">
                 <form class="col s12">
@@ -23,18 +48,18 @@
                         <div class="col s1"></div>
                         <div class="input-field col s3">
                             <input id="start_time" type="text" class="validate">
-                            <label for="start_time">Start Time</label>
+                            <label for="start_time">Bedtime</label>
                         </div>
                         <div class="input-field col s3">
                             <input id="end_time" type="text" class="validate">
-                            <label for="end_time">End Time</label>
+                            <label for="end_time">Wake Time</label>
                         </div>
                         <div class="input-field col s3">
                             <input id="sleep_quality" type="text" class="validate">
                             <label for="sleep_quality">Sleep Quality</label>
                         </div>
                         <div class="col s1">
-                            <button class="waves-effect waves-light btn-large grey lighten-3 grey-text text-darken-4" type="submit" onclick="(function(){socket=io();socket.emit('add',document.getElementById('start_time').value,document.getElementById('end_time').value,document.getElementById('sleep_quality').value)})()">add</button>
+                            <button class="waves-effect waves-light btn-large grey lighten-3 grey-text text-darken-4" type="button" onclick="(function(){socket=io();socket.emit('add',document.getElementById('start_time').value,document.getElementById('end_time').value,document.getElementById('sleep_quality').value)})()">add</button>
                         </div>
                     </div>
                 </form>
@@ -61,9 +86,9 @@
         socket.on("display", function (start, end, hours, quality) {
             var row = document.createElement("tr");
             var _start = document.createElement("td");
-            _start.appendChild(document.createTextNode((new Date(start * 86400000).getHours()) + ":" + (new Date(start * 86400000).getMinutes() < 10 ? "0" + new Date(start * 86400000).getMinutes() : new Date(start * 86400000).getMinutes())));
+            _start.appendChild(document.createTextNode(Math.floor(start * 24) + ":" + (Math.floor((start * 24 - Math.floor(start * 24)) * 60 > 10) ? Math.floor((start * 24 - Math.floor(start * 24)) * 60) : "0" + Math.floor((start * 24 - Math.floor(start * 24)) * 60))));
             var _end = document.createElement("td");
-            _end.appendChild(document.createTextNode((new Date(end * 86400000).getHours()) + ":" + (new Date(end * 86400000).getMinutes() < 10 ? "0" + new Date(end * 86400000).getMinutes() : new Date(end * 86400000).getMinutes())))
+            _end.appendChild(document.createTextNode(Math.floor(end * 24) + ":" + (Math.floor((end * 24 - Math.floor(end * 24)) * 60 >= 10) ? Math.floor((end * 24 - Math.floor(end * 24)) * 60) : "0" + Math.floor((end * 24 - Math.floor(end * 24)) * 60))))
             var _hours = document.createElement("td");
             _hours.appendChild(document.createTextNode((hours * 24).toFixed(2)));
             var _quality = document.createElement("td");
@@ -73,7 +98,10 @@
             row.append(_hours);
             row.append(_quality);
             document.getElementById("sleep_body").appendChild(row);
-        })
+        });
+        socket.on("qualityDisplay", function (quality) {
+            document.getElementById("quality_span").innerText = (quality * 100).toFixed(2) + "%";
+        });
     </script>
 </body>
 
