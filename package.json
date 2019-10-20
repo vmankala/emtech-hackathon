@@ -17,6 +17,9 @@
   },
   "homepage": "https://github.com/vmankala/emtech-hackathon#readme",
   "dependencies": {
+    "csv-parser": "^2.3.1",
+    "csv-write-stream": "^2.0.0",
+    "date-and-time": "^0.10.0",
     "express": "^4.17.1",
     "materialize-css": "^1.0.0-rc.2",
     "socket.io": "^2.3.0"
