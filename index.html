@@ -16,49 +16,41 @@
     <br/>
     <div class="container">
         <div class="card-panel grey lighten-5 z-depth-1">
-            <h4>Add Data</h4>
+            <h4>Add Training Data</h4>
             <div class="row">
                 <form class="col s12">
                     <div class="row center-align">
-                        <div class="input-field col s5">
+                        <div class="col s1"></div>
+                        <div class="input-field col s3">
                             <input id="start_time" type="text" class="validate">
                             <label for="start_time">Start Time</label>
                         </div>
-                        <div class="input-field col s5">
+                        <div class="input-field col s3">
                             <input id="end_time" type="text" class="validate">
                             <label for="end_time">End Time</label>
                         </div>
-                        <div class="col s2">
-                            <a class="waves-effect waves-light btn-large grey lighten-3 grey-text text-darken-4">add</a>
+                        <div class="input-field col s3">
+                            <input id="sleep_quality" type="text" class="validate">
+                            <label for="sleep_quality">Sleep Quality</label>
+                        </div>
+                        <div class="col s1">
+                            <button class="waves-effect waves-light btn-large grey lighten-3 grey-text text-darken-4" type="submit" onclick="(function(){socket=io();socket.emit('add',document.getElementById('start_time').value,document.getElementById('end_time').value,document.getElementById('sleep_quality').value)})()">add</button>
                         </div>
                     </div>
                 </form>
             </div>
-            <table class="highlight">
+            <table id="sleep_table" class="highlight centered">
                 <thead>
                     <tr>
                         <th>Start Time</th>
                         <th>End Time</th>
                         <th>Hours Slept</th>
+                        <th>Sleep Quality</th>
                     </tr>
                 </thead>
 
-                <tbody>
-                    <tr>
-                        <td>9:00 PM</td>
-                        <td>7:30 AM</td>
-                        <td>10.5</td>
-                    </tr>
-                    <tr>
-                        <td>12:00 AM</td>
-                        <td>4:00 AM</td>
-                        <td>4</td>
-                    </tr>
-                    <tr>
-                        <td>12:00 AM</td>
-                        <td>10:00 AM</td>
-                        <td>10</td>
-                    </tr>
+                <tbody id="sleep_body">
+
                 </tbody>
             </table>
         </div>
@@ -66,6 +58,22 @@
     <script src="/socket.io/socket.io.js"></script>
     <script>
         var socket = io();
+        socket.on("display", function (start, end, hours, quality) {
+            var row = document.createElement("tr");
+            var _start = document.createElement("td");
+            _start.appendChild(document.createTextNode((new Date(start * 86400000).getHours()) + ":" + (new Date(start * 86400000).getMinutes() < 10 ? "0" + new Date(start * 86400000).getMinutes() : new Date(start * 86400000).getMinutes())));
+            var _end = document.createElement("td");
+            _end.appendChild(document.createTextNode((new Date(end * 86400000).getHours()) + ":" + (new Date(end * 86400000).getMinutes() < 10 ? "0" + new Date(end * 86400000).getMinutes() : new Date(end * 86400000).getMinutes())))
+            var _hours = document.createElement("td");
+            _hours.appendChild(document.createTextNode((hours * 24).toFixed(2)));
+            var _quality = document.createElement("td");
+            _quality.appendChild(document.createTextNode((quality * 100).toFixed(1) + "%"));
+            row.append(_start);
+            row.append(_end);
+            row.append(_hours);
+            row.append(_quality);
+            document.getElementById("sleep_body").appendChild(row);
+        })
     </script>
 </body>
 
